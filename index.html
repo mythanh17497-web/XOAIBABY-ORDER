@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#f7f3ef">
+<title>XOAIBABY · Quản lý order</title>
+<style>
+:root{--bg:#f7f3ef;--paper:#fff;--ink:#302a28;--muted:#817773;--line:#e9e1dc;--accent:#b66f78;--accent2:#f4e4e5;--green:#557b65;--orange:#b77a35;--shadow:0 8px 28px #503b3010}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:14px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+header{padding:18px 18px 12px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.brand{font-weight:850;letter-spacing:.04em;font-size:18px}.brand small{display:block;font-size:11px;font-weight:500;color:var(--muted);letter-spacing:.02em;margin-top:3px}
+.actions{display:flex;gap:8px;flex-wrap:wrap}.btn{border:1px solid var(--line);background:#fff;color:var(--ink);padding:10px 13px;border-radius:11px;font-weight:650;cursor:pointer}.btn.primary{background:var(--accent);color:#fff;border-color:var(--accent)}.btn.soft{background:var(--accent2);border-color:transparent;color:#804b53}.btn.danger{color:#a34b4b}
+main{padding:0 18px 30px;max-width:1500px;margin:auto}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:8px 0 16px}
+.stat{background:var(--paper);border:1px solid var(--line);border-radius:15px;padding:13px 15px;box-shadow:var(--shadow)}.stat span{display:block;color:var(--muted);font-size:12px}.stat strong{display:block;font-size:21px;margin-top:6px}
+.toolbar{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin:14px 0}
+.tabs{display:flex;gap:6px;background:#eee7e2;padding:4px;border-radius:12px}.tab{border:0;background:transparent;padding:9px 14px;border-radius:9px;font-weight:700;color:var(--muted);cursor:pointer}.tab.active{background:#fff;color:var(--ink);box-shadow:0 2px 8px #0000000c}
+.search{border:1px solid var(--line);border-radius:11px;background:#fff;padding:10px 12px;min-width:220px;max-width:100%;outline-color:var(--accent)}
+.panel{background:#fff;border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);overflow:hidden}
+.panelhead{padding:14px 16px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}.panelhead b{font-size:15px}.hint{font-size:12px;color:var(--muted)}
+.tablewrap{overflow:auto;max-height:62vh}table{border-collapse:separate;border-spacing:0;width:100%;min-width:1240px}th,td{padding:9px 10px;border-bottom:1px solid var(--line);border-right:1px solid #f1ece8;text-align:left;vertical-align:middle;white-space:nowrap}th{position:sticky;top:0;background:#f8f3f0;color:#655b56;font-size:12px;z-index:1}td{background:#fff}tr:hover td{background:#fffaf8}td input,td select{border:1px solid transparent;background:transparent;border-radius:7px;padding:7px 6px;color:var(--ink);font:inherit;max-width:170px}td input:focus,td select:focus{outline:1px solid var(--accent);background:#fff}td .money{max-width:95px;text-align:right}.photo{width:48px;height:54px;object-fit:cover;border-radius:8px;background:#f3efec;display:block}.empty{padding:35px;text-align:center;color:var(--muted)}
+.pill{display:inline-block;border-radius:99px;padding:5px 9px;font-size:11px;font-weight:700;background:#f2ece8;color:#756861}.pill.wait{background:#fff0d9;color:#94631e}.pill.arrived{background:#e6f1e9;color:#477254}
+.modalback{position:fixed;inset:0;background:#211a1880;display:none;align-items:flex-end;justify-content:center;padding:14px;z-index:10}.modalback.show{display:flex}.modal{background:#fff;border-radius:20px 20px 14px 14px;padding:18px;width:min(720px,100%);max-height:92vh;overflow:auto;box-shadow:0 20px 70px #0003}.modal h2{margin:0 0 14px;font-size:19px}.formgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}.field{display:flex;flex-direction:column;gap:6px}.field.full{grid-column:1/-1}.field label{font-size:12px;color:var(--muted);font-weight:650}.field input,.field select,.field textarea{width:100%;border:1px solid var(--line);border-radius:10px;padding:11px;background:#fff;font:inherit;min-width:0}.field textarea{min-height:74px;resize:vertical}.preview{width:76px;height:84px;object-fit:cover;border-radius:10px;background:#f3efec}.modalfoot{display:flex;justify-content:flex-end;gap:8px;margin-top:16px}
+.productgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px;padding:14px}.product{border:1px solid var(--line);border-radius:13px;padding:11px;display:flex;gap:10px;align-items:center}.product img{width:62px;height:70px;object-fit:cover;border-radius:8px;background:#f3efec}.product .meta{min-width:0;flex:1}.product .meta b{display:block}.product .meta small{display:block;color:var(--muted);margin-top:4px}
+.note{padding:11px 14px;color:var(--muted);font-size:12px}
+@media(max-width:700px){header{padding:14px 12px}main{padding:0 10px 24px}.stats{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.stat{padding:11px}.stat strong{font-size:18px}.actions .btn{padding:9px 10px;font-size:12px}.search{width:100%;min-width:0}.toolbar{align-items:stretch}.tabs{width:100%}.tab{flex:1;padding:9px 5px}.panelhead{align-items:flex-start}.formgrid{grid-template-columns:1fr}.field.full{grid-column:auto}.modalback{padding:0}.modal{border-radius:20px 20px 0 0;max-height:94vh;padding-bottom:calc(18px + env(safe-area-inset-bottom))}}
+</style>
+<link rel="manifest" href="./manifest.json">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="XOAIBABY ORDER">
+<link rel="apple-touch-icon" href="./icon-192.png">
+</head>
+<body>
+<header>
+ <div class="brand">XOAIBABY <small>SỔ THEO DÕI ĐƠN ORDER</small></div>
+ <div class="actions">
+  <button class="btn" id="backupBtn">Sao lưu</button>
+  <button class="btn" id="restoreBtn">Khôi phục</button><input type="file" id="restoreFile" accept="application/json" hidden>
+  <button class="btn primary" id="addOrderBtn">＋ Thêm đơn</button>
+ </div>
+</header>
+<main>
+ <section class="stats">
+  <div class="stat"><span>Tổng dòng đặt</span><strong id="sLines">0</strong></div>
+  <div class="stat"><span>Tổng số lượng</span><strong id="sQty">0</strong></div>
+  <div class="stat"><span>Tổng vốn dự kiến</span><strong id="sCost">0đ</strong></div>
+  <div class="stat"><span>Doanh thu / lãi dự kiến</span><strong id="sProfit">0đ</strong></div>
+ </section>
+ <div class="toolbar">
+  <div class="tabs"><button class="tab active" data-tab="orders">Đơn order</button><button class="tab" data-tab="products">Mã hàng</button></div>
+  <input class="search" id="search" placeholder="Tìm mã hàng, tên khách, SĐT...">
+ </div>
+ <section class="panel" id="ordersPanel">
+  <div class="panelhead"><div><b>Danh sách đơn hàng</b><div class="hint">Mỗi dòng là một khách đặt một mã hàng. Một mã có thể có nhiều khách; có thể sửa hoặc xoá từng dòng.</div></div><span class="hint" id="rowCount">0 dòng</span></div>
+  <div class="tablewrap"><table><thead><tr>
+   <th>Ảnh</th><th>Mã hàng</th><th>Ngày ord</th><th>Size</th><th>Phân loại</th><th>SL</th><th>Giá nhập</th><th>Giá bán</th><th>Dự kiến hàng về</th><th>Khách / SĐT / Địa chỉ</th><th>Trạng thái</th><th>Vốn</th><th>Doanh thu</th><th>Lãi dự kiến</th><th></th>
+  </tr></thead><tbody id="ordersBody"></tbody></table><div class="empty" id="ordersEmpty">Chưa có đơn nào. Bấm “＋ Thêm đơn” để bắt đầu nha má.</div></div>
+  <div class="note">Bảng có thể kéo ngang trên điện thoại. Bấm “Sửa” để chỉnh đơn; dữ liệu tự lưu trên máy này.</div>
+ </section>
+ <section class="panel" id="productsPanel" hidden>
+  <div class="panelhead"><div><b>Danh mục mã hàng</b><div class="hint">Tạo mã một lần; khi nhập đơn, chọn mã là ảnh và giá tự hiện.</div></div><button class="btn soft" id="addProductBtn">＋ Thêm mã hàng</button></div>
+  <div class="productgrid" id="productGrid"></div><div class="empty" id="productsEmpty">Chưa có mã hàng. Thêm mã đầu tiên để dùng lại cho nhiều khách.</div>
+ </section>
+</main>
+<div class="modalback" id="orderModal"><div class="modal">
+ <h2>Thêm đơn order</h2>
+ <form id="orderForm"><input id="oId" type="hidden">
+ <div class="formgrid">
+  <div class="field"><label>Mã hàng</label><select id="oProduct" required><option value="">Chọn mã hàng...</option></select></div>
+  <div class="field"><label>Ngày ord</label><input id="oDate" type="date" required></div>
+  <div class="field"><label>Size</label><input id="oSize" placeholder="VD: 18/24m"></div>
+  <div class="field"><label>Phân loại</label><input id="oVariant" placeholder="VD: Hồng, xanh..."></div>
+  <div class="field"><label>Số lượng</label><input id="oQty" type="number" min="1" value="1" required></div>
+  <div class="field"><label>Giá nhập (đ)</label><input id="oCost" type="number" min="0" placeholder="0"></div>
+  <div class="field"><label>Giá bán (đ)</label><input id="oPrice" type="number" min="0" placeholder="0"></div>
+  <div class="field"><label>Dự kiến hàng về</label><input id="oEta" type="date"></div>
+  <div class="field full"><label>Tên khách / SĐT / Địa chỉ (chung một ô)</label><textarea id="oCustomer" placeholder="Tên khách - SĐT - Địa chỉ..." required></textarea></div>
+ </div>
+ <div class="modalfoot"><button type="button" class="btn" data-close="orderModal">Huỷ</button><button class="btn primary" type="submit">Lưu đơn</button></div>
+ </form>
+ </div></div>
+<div class="modalback" id="productModal"><div class="modal">
+ <h2 id="productTitle">Thêm mã hàng</h2>
+ <form id="productForm"><input id="pId" type="hidden">
+ <div class="formgrid">
+  <div class="field"><label>Mã hàng / SKU</label><input id="pSku" placeholder="VD: XB001" required></div>
+  <div class="field"><label>Tên sản phẩm</label><input id="pName" placeholder="VD: Váy hồng công chúa"></div>
+  <div class="field"><label>Size mặc định (có thể sửa ở từng đơn)</label><input id="pSize" placeholder="VD: 18/24m"></div>
+  <div class="field"><label>Phân loại mặc định</label><input id="pVariant" placeholder="VD: Hồng"></div>
+  <div class="field"><label>Giá nhập (đ)</label><input id="pCost" type="number" min="0" placeholder="0"></div>
+  <div class="field"><label>Giá bán (đ)</label><input id="pPrice" type="number" min="0" placeholder="0"></div>
+  <div class="field full"><label>Ảnh sản phẩm</label><input id="pImage" type="file" accept="image/*"><div><img id="pPreview" class="preview" alt="Xem trước ảnh" hidden></div></div>
+ </div>
+ <div class="modalfoot"><button type="button" class="btn" data-close="productModal">Huỷ</button><button class="btn primary" type="submit">Lưu mã hàng</button></div>
+ </form>
+ </div></div>
+<script>
+const KEY='xoaibaby_order_v1';
+let db={products:[],orders:[]}, currentImage='';
+const $=id=>document.getElementById(id);
+const money=n=>(Number(n)||0).toLocaleString('vi-VN')+'đ';
+const today=()=>{let d=new Date();return new Date(d.getTime()-d.getTimezoneOffset()*60000).toISOString().slice(0,10)};
+function load(){try{const x=JSON.parse(localStorage.getItem(KEY)||'{}');db={products:Array.isArray(x.products)?x.products:[],orders:Array.isArray(x.orders)?x.orders:[]}}catch(e){db={products:[],orders:[]}}}
+function save(){localStorage.setItem(KEY,JSON.stringify(db));render()}
+function product(id){return db.products.find(p=>p.id===id)}
+function render(){
+ const q=$('search').value.trim().toLowerCase();
+ const rows=db.orders.filter(o=>{let p=product(o.productId)||{};return [p.sku,p.name,o.customer,o.size,o.variant,o.status].join(' ').toLowerCase().includes(q)});
+ $('ordersBody').innerHTML=rows.map(o=>{let p=product(o.productId)||{},qty=+o.qty||1,cost=(+o.cost||0)*qty,rev=(+o.price||0)*qty,profit=rev-cost;
+ return `<tr data-id="${o.id}"><td>${p.image?`<img class="photo" src="${p.image}">`:'<div class="photo"></div>'}</td><td><b>${esc(p.sku||'—')}</b></td><td>${esc(o.date||'')}</td><td>${esc(o.size||'')}</td><td>${esc(o.variant||'')}</td><td>${qty}</td><td>${money(o.cost)}</td><td>${money(o.price)}</td><td>${esc(o.eta||'')}</td><td style="white-space:pre-line;min-width:190px;max-width:240px">${esc(o.customer||'')}</td><td><select class="status" aria-label="Trạng thái"><option ${o.status==='Đang order'?'selected':''}>Đang order</option><option ${o.status==='Đã về'?'selected':''}>Đã về</option><option ${o.status==='Đã giao'?'selected':''}>Đã giao</option><option ${o.status==='Đã huỷ'?'selected':''}>Đã huỷ</option></select></td><td>${money(cost)}</td><td>${money(rev)}</td><td style="color:${profit>=0?'#477254':'#a34b4b'};font-weight:700">${money(profit)}</td><td><button class="btn editOrder" title="Sửa đơn">Sửa</button> <button class="btn danger delete" title="Xoá dòng">×</button></td></tr>`}).join('');
+ $('ordersEmpty').style.display=rows.length?'none':'block';$('rowCount').textContent=rows.length+' dòng';
+ $('productGrid').innerHTML=db.products.filter(p=>[p.sku,p.name,p.size,p.variant].join(' ').toLowerCase().includes(q)).map(p=>`<div class="product"><img src="${p.image||''}" onerror="this.style.visibility='hidden'"><div class="meta"><b>${esc(p.sku)} · ${esc(p.name||'')}</b><small>${esc(p.size||'')} ${esc(p.variant||'')}<br>Nhập ${money(p.cost)} · Bán ${money(p.price)}</small></div><button class="btn" data-edit="${p.id}">Sửa</button></div>`).join('');
+ $('productsEmpty').style.display=db.products.length?'none':'block';
+ const active=db.orders.filter(o=>o.status!=='Đã huỷ');let qty=active.reduce((s,o)=>s+(+o.qty||1),0),cost=active.reduce((s,o)=>s+(+o.cost||0)*(+o.qty||1),0),rev=active.reduce((s,o)=>s+(+o.price||0)*(+o.qty||1),0);
+ $('sLines').textContent=active.length;$('sQty').textContent=qty;$('sCost').textContent=money(cost);$('sProfit').textContent=money(rev-cost);
+ $('oProduct').innerHTML='<option value="">Chọn mã hàng...</option>'+db.products.map(p=>`<option value="${p.id}">${esc(p.sku)}${p.name?' · '+esc(p.name):''}</option>`).join('');
+}
+function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function show(id){$(id).classList.add('show')}function hide(id){$(id).classList.remove('show')}
+$('addOrderBtn').onclick=()=>{if(!db.products.length){alert('Má tạo mã hàng trước nha. Vào tab “Mã hàng” để thêm mã.');switchTab('products');return}$('orderForm').reset();$('oId').value='';$('orderModal').querySelector('h2').textContent='Thêm đơn order';$('oDate').value=today();$('oQty').value=1;$('oCost').value='';$('oPrice').value='';show('orderModal')};
+$('addProductBtn').onclick=()=>openProduct();
+function openProduct(p=null){$('productForm').reset();$('pId').value=p?.id||'';$('pSku').value=p?.sku||'';$('pName').value=p?.name||'';$('pSize').value=p?.size||'';$('pVariant').value=p?.variant||'';$('pCost').value=p?.cost??'';$('pPrice').value=p?.price??'';currentImage=p?.image||'';$('pPreview').hidden=!currentImage;if(currentImage)$('pPreview').src=currentImage;$('productTitle').textContent=p?'Sửa mã hàng':'Thêm mã hàng';show('productModal')}
+$('pImage').onchange=async e=>{const f=e.target.files[0];if(!f)return;currentImage=await compress(f);$('pPreview').src=currentImage;$('pPreview').hidden=false};
+function compress(file){return new Promise((resolve,reject)=>{const r=new FileReader();r.onload=()=>{const im=new Image();im.onload=()=>{let scale=Math.min(1,1000/Math.max(im.width,im.height)),c=document.createElement('canvas');c.width=Math.round(im.width*scale);c.height=Math.round(im.height*scale);c.getContext('2d').drawImage(im,0,0,c.width,c.height);resolve(c.toDataURL('image/jpeg',.78))};im.onerror=reject;im.src=r.result};r.onerror=reject;r.readAsDataURL(file)})}
+$('productForm').onsubmit=e=>{e.preventDefault();let id=$('pId').value||crypto.randomUUID(),sku=$('pSku').value.trim();if(db.products.some(p=>p.sku.toLowerCase()===sku.toLowerCase()&&p.id!==id)){alert('Mã hàng này đã có rồi má.');return}let p={id,sku,name:$('pName').value.trim(),size:$('pSize').value.trim(),variant:$('pVariant').value.trim(),cost:+$('pCost').value||0,price:+$('pPrice').value||0,image:currentImage};let i=db.products.findIndex(x=>x.id===id);if(i>=0)db.products[i]=p;else db.products.push(p);hide('productModal');save()};
+$('oProduct').onchange=()=>{let p=product($('oProduct').value);if(!p)return;$('oSize').value=p.size||'';$('oVariant').value=p.variant||'';$('oCost').value=p.cost||'';$('oPrice').value=p.price||''};
+$('orderForm').onsubmit=e=>{e.preventDefault();let id=$('oId').value||crypto.randomUUID(),old=db.orders.find(x=>x.id===id);let item={id,productId:$('oProduct').value,date:$('oDate').value||today(),size:$('oSize').value.trim(),variant:$('oVariant').value.trim(),qty:Math.max(1,+$('oQty').value||1),cost:+$('oCost').value||0,price:+$('oPrice').value||0,eta:$('oEta').value,customer:$('oCustomer').value.trim(),status:old?.status||'Đang order'};if(old)Object.assign(old,item);else db.orders.unshift(item);hide('orderModal');save()};
+$('ordersBody').onchange=e=>{if(e.target.classList.contains('status')){let tr=e.target.closest('tr'),o=db.orders.find(x=>x.id===tr.dataset.id);if(o){o.status=e.target.value;save()}}};
+$('ordersBody').onclick=e=>{let tr=e.target.closest('tr');if(!tr)return;let o=db.orders.find(x=>x.id===tr.dataset.id);if(e.target.classList.contains('editOrder')&&o){$('orderForm').reset();$('oId').value=o.id;$('orderModal').querySelector('h2').textContent='Sửa đơn order';$('oProduct').value=o.productId;$('oDate').value=o.date||today();$('oSize').value=o.size||'';$('oVariant').value=o.variant||'';$('oQty').value=o.qty||1;$('oCost').value=o.cost||0;$('oPrice').value=o.price||0;$('oEta').value=o.eta||'';$('oCustomer').value=o.customer||'';show('orderModal')}if(e.target.classList.contains('delete')){if(confirm('Xoá dòng đơn này nha má?')){db.orders=db.orders.filter(x=>x.id!==tr.dataset.id);save()}}};
+$('productGrid').onclick=e=>{let b=e.target.closest('[data-edit]');if(b)openProduct(product(b.dataset.edit))};
+$('search').oninput=render;
+document.querySelectorAll('[data-close]').forEach(b=>b.onclick=()=>hide(b.dataset.close));
+['orderModal','productModal'].forEach(id=>$(id).onclick=e=>{if(e.target.id===id)hide(id)});
+function switchTab(t){document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('active',b.dataset.tab===t));$('ordersPanel').hidden=t!=='orders';$('productsPanel').hidden=t!=='products';$('search').placeholder=t==='orders'?'Tìm mã hàng, tên khách, SĐT...':'Tìm mã hàng, tên sản phẩm...'}
+document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>switchTab(b.dataset.tab));
+$('backupBtn').onclick=()=>{let blob=new Blob([JSON.stringify(db)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='xoaibaby-backup-'+today()+'.json';a.click();URL.revokeObjectURL(a.href)};
+$('restoreBtn').onclick=()=>$('restoreFile').click();
+$('restoreFile').onchange=e=>{let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{try{let x=JSON.parse(r.result);if(!Array.isArray(x.products)||!Array.isArray(x.orders))throw Error();if(confirm('Khôi phục sẽ thay dữ liệu hiện tại. Má đã sao lưu chưa?')){db=x;save();alert('Khôi phục xong!')}}catch(err){alert('File sao lưu không hợp lệ.')}e.target.value=''};r.readAsText(f)};
+if ('serviceWorker' in navigator) { window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js').catch(()=>{})); }
+load();render();
+</script>
+</body></html>
